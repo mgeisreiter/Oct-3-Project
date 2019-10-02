@@ -6,12 +6,12 @@ from dash.dependencies import Input, Output, State
 
 ########### Define your variables ######
 
-myheading1='Where do you want to go?'
-tabtitle = 'Travel'
-list_of_options=['San Francisco', 'Patagonia', 'Sydney', 'Cape Town', 'Paris']
-list_of_images=['sf.jpeg', 'patagonia.jpeg', 'sydney.jpg', 'capetown.jpg', 'paris.jpg', 'airplane.jpg']
-sourceurl = 'https://www.tripadvisor.com/'
-githublink = 'https://github.com/mgeisreiter/dash-callbacks-radio'
+myheading1='Where Should You Eat?'
+tabtitle = 'Restaurants!'
+list_of_meals=['Breakfast', 'Lunch', 'Dinner']
+list_of_type=['Fast Casual', 'Sit Down', 'Surprise Me']
+sourceurl = 'https://dash.plot.ly/getting-started-part-2'
+githublink = 'https://github.com/austinlasseter/dash-callbacks-multi-input'
 
 
 ########## Set up the chart
@@ -26,33 +26,98 @@ app.title=tabtitle
 
 app.layout = html.Div(children=[
     html.H1(myheading1),
-    dcc.RadioItems(
-        id='your_input_here',
-        options=[
-                {'label':list_of_options[0], 'value':list_of_images[0]},
-                {'label':list_of_options[1], 'value':list_of_images[1]},
-                {'label':list_of_options[2], 'value':list_of_images[2]},
-                {'label':list_of_options[3], 'value':list_of_images[3]},
-                {'label':list_of_options[4], 'value':list_of_images[4]},
-                ],
-        value=list_of_images[5],
-        ),
-    html.Div(id='your_output_here', children=''),
+    html.Div([
+        html.Div([
+            dcc.Dropdown(
+                id='pick-a-meal',
+                options=[
+                        {'label':list_of_meals[0], 'value':list_of_meals[0]},
+                        {'label':list_of_meals[1], 'value':list_of_meals[1]},
+                        {'label':list_of_meals[2], 'value':list_of_meals[2]},
+                        ],
+                value='',
+                ),
+        ],className='two columns'),
+        html.Div([
+            dcc.RadioItems(
+                id='pick-a-type',
+                options=[
+                        {'label':list_of_type[0], 'value':list_of_type[0]},
+                        {'label':list_of_type[1], 'value':list_of_type[1]},
+                        {'label':list_of_type[2], 'value':list_of_type[2]},
+                        ],
+                value='',
+                ),
+        ],className='ten columns'),
+        ], className = 'twelve columns'),
+    html.Br(),
+    html.Div([
+        html.Div([
+            html.H6('How hungry are you?'),
+            dcc.Slider(
+                id='hunger_level',
+                min = 1,
+                max = 6,
+                step = 0.5,
+                marks={i:str(i) for i in range(1, 7)},
+                value  = 4,
+                ),
+        ],className='four columns'),
+        ], className = 'twelve columns'),
+    html.Br(),
+    html.Br(),
+    html.Div([
+        html.Div(id='your_output_here', children=''),
+    ], className = 'twelve columns'),
+    html.Br(),
     html.Br(),
     html.A('Code on Github', href=githublink),
     html.Br(),
-    html.A('Book your Trip!', href=sourceurl),
-    ]
+    html.A("Data Source", href=sourceurl),
+    ],
+            style={'textAlign':'left',
+                'fontColor':'#0800a8',
+                'backgroundColor':'#fff5f8',}
 )
 
-
 ########## Define Callback
+
 @app.callback(Output('your_output_here', 'children'),
-              [Input('your_input_here', 'value')])
-def radio_results(image_you_chose):
-    return html.Img(src=app.get_asset_url(image_you_chose), style={'width': 'auto', 'height': '50%'}),
+              [Input('pick-a-meal', 'value'),
+               Input('pick-a-type', 'value'),
+               Input('hunger_level', 'value')])
+def radio_results(meal_you_picked, type_you_picked, hunger_level):
+    if meal_you_picked in  ('Breakfast', 'Lunch', 'Dinner'):
+        if type_you_picked == '':
+            image_you_chose = f'{meal_you_picked}.jpg'
+            message = 'Please select a meal type.'
+            return html.Br(), message, html.Br() , html.Img(src=app.get_asset_url(image_you_chose), style={'width': 'auto', 'height': 'auto'}), html.Br(), html.Br()
+        else:
+            if hunger_level > 4:
+                image_you_chose=f'{meal_you_picked}-{type_you_picked}-A.jpg'
+                list_of_restaurants= {'Breakfast': {'Fast Casual': "Call Your Mother Deli", 'Sit Down': "Ted's Bulliten", 'Surprise Me':'Unconventional Diner'},
+                              'Lunch': {'Fast Casual': "Bub & Pops", 'Sit Down': "Texas de Brazil", 'Surprise Me':'Florida Ave Grill'},
+                              'Dinner': {'Fast Casual': "Chipotle", 'Sit Down': "Thai X-ing", 'Surprise Me':'Al Volo'}}
+                message = f'You should eat at {list_of_restaurants[meal_you_picked][type_you_picked]}!'
+                return html.Br(), message, html.Br() , html.Img(src=app.get_asset_url(image_you_chose), style={'width': 'auto', 'height': 'auto'}),html.Br(),html.Br()
+            elif hunger_level > 2 and hunger_level <= 4:
+                image_you_chose=f'{meal_you_picked}-{type_you_picked}-B.jpg'
+                list_of_restaurants= {'Breakfast': {'Fast Casual': "Dolcezza", 'Sit Down': "Commissary", 'Surprise Me':'Busboys and Poets'},
+                              'Lunch': {'Fast Casual': "Taco Bell", 'Sit Down': "Logan Tavern", 'Surprise Me':'Slipstream'},
+                              'Dinner': {'Fast Casual': "Cava", 'Sit Down': "Surfside", 'Surprise Me':'Maydan'}}
+                message = f'You should eat at {list_of_restaurants[meal_you_picked][type_you_picked]}!'
+                return html.Br(), message, html.Br() , html.Img(src=app.get_asset_url(image_you_chose), style={'width': 'auto', 'height': 'auto'}),html.Br(),html.Br()
+            elif hunger_level > 0 and hunger_level <= 2:
+                image_you_chose=f'{meal_you_picked}-{type_you_picked}-C.jpg'
+                list_of_restaurants= {'Breakfast': {'Fast Casual': "Fruitive", 'Sit Down': "A Baked Joint", 'Surprise Me':'Bluestone Lane'},
+                              'Lunch': {'Fast Casual': "Sweetgreen", 'Sit Down': "Emmissary", 'Surprise Me':'Thip Khao'},
+                              'Dinner': {'Fast Casual': "Hip City Veg", 'Sit Down': "Matchbox", 'Surprise Me':'Taqueria Nacional'}}
+                message = f'You should eat at {list_of_restaurants[meal_you_picked][type_you_picked]}!'
+                return html.Br(), message ,html.Br() , html.Img(src=app.get_asset_url(image_you_chose), style={'width': 'auto', 'height': 'auto'}),html.Br()
+    else:
+        return 'Please select a meal.'
 
 
-############ Deploy
+
 if __name__ == '__main__':
     app.run_server()
