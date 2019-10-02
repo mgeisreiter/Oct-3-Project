@@ -57,9 +57,9 @@ app.layout = html.Div(children=[
             dcc.Slider(
                 id='hunger_level',
                 min = 1,
-                max = 6,
-                step = 0.5,
-                marks={i:str(i) for i in range(1, 7)},
+                max = 3,
+                step = 1,
+                marks={i:str(i) for i in range(1, 4)},
                 value  = 4,
                 ),
         ],className='four columns'),
@@ -93,21 +93,21 @@ def radio_results(meal_you_picked, type_you_picked, hunger_level):
             message = 'Please select a meal type.'
             return html.Br(), message, html.Br() , html.Img(src=app.get_asset_url(image_you_chose), style={'width': 'auto', 'height': 'auto'}), html.Br(), html.Br()
         else:
-            if hunger_level > 4:
+            if hunger_level > 2:
                 image_you_chose=f'{meal_you_picked}-{type_you_picked}-A.jpg'
                 list_of_restaurants= {'Breakfast': {'Fast Casual': "Call Your Mother Deli", 'Sit Down': "Ted's Bulliten", 'Surprise Me':'Unconventional Diner'},
                               'Lunch': {'Fast Casual': "Bub & Pops", 'Sit Down': "Texas de Brazil", 'Surprise Me':'Florida Ave Grill'},
                               'Dinner': {'Fast Casual': "Chipotle", 'Sit Down': "Thai X-ing", 'Surprise Me':'Al Volo'}}
                 message = f'You should eat at {list_of_restaurants[meal_you_picked][type_you_picked]}!'
                 return html.Br(), message, html.Br() , html.Img(src=app.get_asset_url(image_you_chose), style={'width': 'auto', 'height': 'auto'}),html.Br(),html.Br()
-            elif hunger_level > 2 and hunger_level <= 4:
+            elif hunger_level > 1 and hunger_level <= 2:
                 image_you_chose=f'{meal_you_picked}-{type_you_picked}-B.jpg'
                 list_of_restaurants= {'Breakfast': {'Fast Casual': "Dolcezza", 'Sit Down': "Commissary", 'Surprise Me':'Busboys and Poets'},
                               'Lunch': {'Fast Casual': "Taco Bell", 'Sit Down': "Logan Tavern", 'Surprise Me':'Slipstream'},
                               'Dinner': {'Fast Casual': "Cava", 'Sit Down': "Surfside", 'Surprise Me':'Maydan'}}
                 message = f'You should eat at {list_of_restaurants[meal_you_picked][type_you_picked]}!'
                 return html.Br(), message, html.Br() , html.Img(src=app.get_asset_url(image_you_chose), style={'width': 'auto', 'height': 'auto'}),html.Br(),html.Br()
-            elif hunger_level > 0 and hunger_level <= 2:
+            elif hunger_level > 0 and hunger_level <= 1:
                 image_you_chose=f'{meal_you_picked}-{type_you_picked}-C.jpg'
                 list_of_restaurants= {'Breakfast': {'Fast Casual': "Fruitive", 'Sit Down': "A Baked Joint", 'Surprise Me':'Bluestone Lane'},
                               'Lunch': {'Fast Casual': "Sweetgreen", 'Sit Down': "Emmissary", 'Surprise Me':'Thip Khao'},
