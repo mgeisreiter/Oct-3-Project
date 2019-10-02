@@ -89,7 +89,7 @@ app.layout = html.Div(children=[
 def radio_results(meal_you_picked, type_you_picked, hunger_level):
     if meal_you_picked in  ('Breakfast', 'Lunch', 'Dinner'):
         if type_you_picked == '':
-            image_you_chose = f'{meal_you_picked}.jpg'
+            image_you_chose = f'{meal_you_picked.lower()}.jpg'
             message = 'Please select a meal type.'
             return html.Br(), message, html.Br() , html.Img(src=app.get_asset_url(image_you_chose), style={'width': 'auto', 'height': 'auto'}), html.Br(), html.Br()
         else:
