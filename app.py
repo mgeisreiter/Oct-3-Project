@@ -10,8 +10,8 @@ myheading1='Where Should You Eat?'
 tabtitle = 'Restaurants!'
 list_of_meals=['Breakfast', 'Lunch', 'Dinner']
 list_of_type=['Fast Casual', 'Sit Down', 'Surprise Me']
-sourceurl = 'https://dash.plot.ly/getting-started-part-2'
-githublink = 'https://github.com/austinlasseter/dash-callbacks-multi-input'
+sourceurl = 'https://yelp.com'
+githublink = 'https://github.com/mgeisreiter/Oct-3-Project'
 
 
 ########## Set up the chart
